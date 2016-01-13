@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import pandas as pd
 from datetime import datetime
 import dateutil.parser
 
@@ -39,6 +40,17 @@ def to_canonical(obj):
         if not all(isinstance(k, str) for k in obj.iterkeys()):
             return UnexpectedTypeError()
         return {"type": "dict", "values": {k: to_canonical(v) for k, v in obj.iteritems()}}
+    elif isinstance(obj, pd.DatetimeIndex):
+        return {"type": "datetimeindex", "values": obj.map(datetime.isoformat).tolist()}
+    elif isinstance(obj, pd.Int64Index):
+        return {"type": "intindex", "values": obj.values.tolist()}
+    elif isinstance(obj, pd.Index):
+        return {"type": "stringindex", "values": obj.values.tolist()}
+    elif isinstance(obj, pd.DataFrame):
+        return {"type": "dataframe",
+                "data": obj.values.flatten().tolist(),
+                "index": to_canonical(obj.index),
+                "columns": to_canonical(obj.columns)}
     else:
         raise UnexpectedTypeError()
 
@@ -67,5 +79,16 @@ def from_canonical(json_obj):
         return [from_canonical(x) for x in json_obj['values']]
     elif vtype == 'dict':
         return {k: from_canonical(v) for k, v in json_obj['values'].iteritems()}
+    elif vtype == 'datetimeindex':
+        return pd.DatetimeIndex([dateutil.parser.parse(x) for x in json_obj['values']], dtype='datetime64[ns]')
+    elif vtype == 'intindex':
+        return pd.Int64Index(json_obj['values'], dtype='int64')
+    elif vtype == 'stringindex':
+        return pd.Index(json_obj['values'], dtype='object')
+    elif vtype == 'dataframe':
+        index = from_canonical(json_obj['index'])
+        columns = from_canonical(json_obj['columns'])
+        data = np.array(json_obj['data']).reshape((len(index), len(columns)))
+        return pd.DataFrame(data, index, columns)
     else:
         raise UnexpectedTypeError()

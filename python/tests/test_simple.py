@@ -1,6 +1,7 @@
 import pytest
 import vobj
 import numpy as np
+import pandas as pd
 from datetime import datetime
 
 bool_tests = [
@@ -42,12 +43,24 @@ dict_tests = [
     ({'a': 1}, '{"values": {"a": {"type": "int", "value": 1}}, "type": "dict"}'),
     ({'a': [1.0], 'b': [2.0]}, '{"values": {"a": {"values": [{"type": "float", "value": 1.0}], "type": "list"}, "b": {"values": [{"type": "float", "value": 2.0}], "type": "list"}}, "type": "dict"}'),
 ]
-tests = bool_tests + int_tests + float_tests + string_tests + datetime_tests + array_tests + list_tests + dict_tests
+index_tests = [
+    (pd.Int64Index([1, 2], dtype='int64'), '{"values": [1, 2], "type": "intindex"}'),
+    (pd.Index([u'A', u'B'], dtype='object'), '{"values": ["A", "B"], "type": "stringindex"}'),
+    (pd.DatetimeIndex(['2015-12-25', '2015-12-26'], dtype='datetime64[ns]', freq=None, tz=None), '{"values": ["2015-12-25T00:00:00", "2015-12-26T00:00:00"], "type": "datetimeindex"}')
+]
+dataframe_tests = [
+    (pd.DataFrame([[1., 2.], [3., 4.]], [0, 1], ["A", "B"]), '{"data": [1.0, 2.0, 3.0, 4.0], "type": "dataframe", "columns": {"values": ["A", "B"], "type": "stringindex"}, "index": {"values": [0, 1], "type": "intindex"}}')
+]
+tests = bool_tests + int_tests + float_tests + string_tests + datetime_tests + array_tests + list_tests + dict_tests + index_tests + dataframe_tests
 
 
 def is_equal(a, b):
     if isinstance(a, np.ndarray):
         return np.array_equal(a, b)
+    if isinstance(a, pd.Index):
+        return np.array_equal(a, b)
+    if isinstance(a, pd.DataFrame):
+        return a.equals(b)
     return a == b
 
 @pytest.mark.parametrize("value,s", tests)
