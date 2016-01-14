@@ -5,8 +5,8 @@ from datetime import datetime
 import dateutil.parser
 
 
-class VObjException(Exception): pass
-class UnexpectedTypeError(VObjException): pass
+class RosettaException(Exception): pass
+class UnexpectedTypeError(RosettaException): pass
 
 
 def dumps(obj):

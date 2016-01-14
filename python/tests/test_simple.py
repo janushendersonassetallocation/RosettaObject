@@ -1,5 +1,5 @@
 import pytest
-import vobj
+import rosettaobject
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -65,9 +65,9 @@ def is_equal(a, b):
 
 @pytest.mark.parametrize("value,s", tests)
 def test_serialize(value, s):
-    assert is_equal(vobj.dumps(value), s)
+    assert is_equal(rosettaobject.dumps(value), s)
 
 
 @pytest.mark.parametrize("value,s", tests)
 def test_deserialize(value, s):
-    assert is_equal(vobj.loads(s), value)
+    assert is_equal(rosettaobject.loads(s), value)

@@ -1,5 +1,5 @@
-VObj
-====
+Rosetta Object
+==============
 
 Library providing canonical cross-language mapping of certain data types to and from JSON.
 
