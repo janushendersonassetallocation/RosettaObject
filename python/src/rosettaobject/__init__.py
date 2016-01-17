@@ -1,1 +1,1 @@
-from .robj import dumps, loads
+from .robj import dumps, loads, to_robj, to_pyobj
