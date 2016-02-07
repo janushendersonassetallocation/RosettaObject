@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Deedle;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -46,16 +47,20 @@ namespace StdJsonTest
             new List<object>(),
             new List<object> {0, 1, 2},
             new List<object> {"a", "b", "c"},
-            new List<object> {new List<object> {0}, new List<object> { 0, 1 } },
+            new List<object> {new List<object> {0}, new List<object> {0, 1}},
             new Dictionary<string, object>(),
             new Dictionary<string, object> {{"a", 1}},
             new Dictionary<string, object> {{"a", new List<object> {1.0}}, {"b", new List<object>() {2.0}}},
 
-            new object(), // pd.Int64Index([1, 2], dtype='int64'),
-            new object(), // pd.Index([u'A', u'B'], dtype='object'),
-            new object(), //pd.DatetimeIndex(['2015-12-25', '2015-12-26'], dtype='datetime64[ns]', freq=None, tz=None),
+            Index.Create(new[] {1, 2}),
+            Index.Create(new[] {"A", "B"}),
+            Index.Create(new[] {new DateTime(2015, 12, 25), new DateTime(2015, 12, 26),}),
 
-            new object(), //pd.DataFrame([[1., 2.], [3., 4.]], [0, 1], ["A", "B"])
+            Frame.FromColumns(new[]
+            {
+                new KeyValuePair<string, Series<int, double>>("A", new Series<int, double>(new[] {0, 1}, new[] {1.0, 3.0})),
+                new KeyValuePair<string, Series<int, double>>("B", new Series<int, double>(new[] {0, 1}, new[] {2.0, 4.0}))
+            }) //pd.DataFrame([[1., 2.], [3., 4.]], [0, 1], ["A", "B"])
         };
 
         public static List<object[]> StdTestData = StdRObjs.Zip(StdCsObjects, (a, b) => new[] {a, b}).ToList();

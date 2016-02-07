@@ -12,10 +12,15 @@ namespace RosettaObject
             new IntRObjConvertor(),
             new StringRObjConvertor(),
             new DoubleRObjConvertor(),
+            new DateTimeRObjConvertor(),
             new IntArrayRObjConvertor(),
             new DoubleArrayRObjConvertor(),
             new DictionaryRObjConvertor(),
             new ListRObjConvertor(),
+            new IntIndexRObjConvertor(),
+            new StringIndexRObjConvertor(),
+            new DateTimeIndexRObjConvertor(),
+            new FrameRObjConvertor()
         };
 
         private readonly IList<BaseRObjConvertor> _convertors;

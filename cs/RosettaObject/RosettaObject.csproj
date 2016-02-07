@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Deedle, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Deedle.1.2.4\lib\net40\Deedle.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -47,15 +51,20 @@
     <Compile Include="BoolRObjConvertor.cs" />
     <Compile Include="ConstString.cs" />
     <Compile Include="ConvertorSet.cs" />
+    <Compile Include="DateTimeIndexRObjConvertor.cs" />
+    <Compile Include="DateTimeRObjConvertor.cs" />
     <Compile Include="DictionaryRObjConvertor.cs" />
     <Compile Include="DoubleArrayRObjConvertor.cs" />
     <Compile Include="DoubleRObjConvertor.cs" />
+    <Compile Include="FrameRObjConvertor.cs" />
+    <Compile Include="IntIndexRObjConvertor.cs" />
     <Compile Include="IntArrayRObjConvertor.cs" />
     <Compile Include="BaseRObjConvertor.cs" />
     <Compile Include="IntRObjConvertor.cs" />
     <Compile Include="ListRObjConvertor.cs" />
     <Compile Include="Multidimensional.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringIndexRObjConvertor.cs" />
     <Compile Include="StringRObjConvertor.cs" />
   </ItemGroup>
   <ItemGroup>
