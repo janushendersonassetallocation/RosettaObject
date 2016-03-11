@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rosetta Object Unit Tests</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.22.0.css">
+    <script src="//code.jquery.com/qunit/qunit-1.22.0.js"></script>
+    <script src="../src/koala.js"></script>
+    <script src="../src/robj.js"></script>
+ 
+    <script>
+        var stdJsObjs = [
+            true,
+            false,
+            0,
+            1,
+            73,
+            0.0,
+            3.142,
+            "",
+            "How now brown cow?",
+            new Date(2015, 11, 25),
+            new koala.NumericArray([], "int"),
+            new koala.NumericArray([0, 1, 2]),
+            new koala.NumericArray([[0, 1], [2, 3]]),
+            new koala.NumericArray([]),
+            new koala.NumericArray([0., 1., 2.]),
+            new koala.NumericArray([[0., 1.], [2., 3.]]),
+            [],
+            [0, 1, 2],
+            ['a', 'b', 'c'],
+            [[0], [0, 1]],
+            {},
+            {'a': 1},
+            {'a': [1.0], 'b': [2.0]},
+            new koala.Index([1, 2], "int"),
+            new koala.Index(['A', 'B']),
+            new koala.Index([new Date(2015, 11, 25), new Date(2015, 11, 26)], dtype='datetime'),
+            new koala.DataFrame([[1., 2.], [3., 4.]], [0, 1], ["A", "B"])
+        ];
+
+        var startLine = 15;
+        function runTests(testData) {
+            QUnit.test("Rosetta Object Tests", function (assert) {
+                for (var i = 0; i < stdJsObjs.length; i++) {
+                    if (stdJsObjs[i].constructor === koala.Index || stdJsObjs[i].constructor === koala.NumericArray) {
+                        assert.deepEqual(rObj.toJsobj(testData[i]).values, stdJsObjs[i].values, "From rOjb >> JSObj Test line " + (startLine + i) + (" (values)"));
+                        assert.deepEqual(rObj.toJsobj(testData[i]).dtype, stdJsObjs[i].dtype, "From rOjb >> JSObj Test line " + (startLine + i) + (" (dtype)"));
+                    } else if (stdJsObjs[i].constructor === koala.DataFrame) {
+                        assert.deepEqual(rObj.toJsobj(testData[i]).values, stdJsObjs[i].values, "From rOjb >> JSObj Test line " + (startLine + i) + (" (values)"));
+                        assert.deepEqual(rObj.toJsobj(testData[i]).dtypes, stdJsObjs[i].dtypes, "From rOjb >> JSObj Test line " + (startLine + i) + (" (dtypes)"));
+                    } else {
+                        assert.deepEqual(rObj.toJsobj(testData[i]), stdJsObjs[i], "From rOjb >> JSObj  Test line " + (startLine + i));
+                        assert.deepEqual(testData[i], rObj.toRobj(stdJsObjs[i]), "From JSObj >> rObj  Test line " + (startLine + i));
+                    }
+                }
+            });
+        }
+
+         $.ajax({
+              success: function(data){
+                  $.ajax({
+                      url: "../../test_data/std_objects.json",
+                      success: function(data){
+                        runTests(data);
+                      }
+                    });
+              }
+         });
+
+  </script>
+</head>
+
+
+<body>
+ <div id="qunit"></div>
+    <ul>
+        <li>Int vs. float tests may fail - cannot currently distinguish between 2. and 2</li>
+    </ul>
+
+</body>
+</html>
